@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { useLocation, useNavigate, useRoutes } from 'react-router-dom'
 import { useAppSelector } from '../../hooks/useRedux';
 import routes from '../../routes';
@@ -27,7 +27,9 @@ export default function Auth() {
         isLogin?<></>:<Header />
       }
       <div className='base-box'>
-          {router}
+          <Suspense fallback>
+            {router}
+          </Suspense>
       </div>
     </>
   )

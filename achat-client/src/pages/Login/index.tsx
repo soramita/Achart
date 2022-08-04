@@ -20,8 +20,8 @@ const Login: React.FC = () => {
     disPatch(saveToken('123'))
     navigate('/home')
   };
-  const toPage = ()=>{
-
+  const toRegister = ()=>{
+    navigate('/register')
   }
   useEffect(()=>{
     document.title = '登录'
@@ -64,7 +64,7 @@ const Login: React.FC = () => {
         <Button type="primary" htmlType="submit" className="login-form-button">
           登录
         </Button>
-        还没有账号？ <Button type='link' onClick={toPage}>立即注册！</Button>
+        还没有账号？ <Button type='link' onClick={toRegister}>立即注册！</Button>
       </Form.Item>
     </Form>
   );
