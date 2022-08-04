@@ -9,7 +9,7 @@ const App:React.FC = () => {
   dispatch(saveToken('123'))
   return (
     <div>
-      <Auth></Auth>
+        <Auth></Auth>
     </div>
   );
 }

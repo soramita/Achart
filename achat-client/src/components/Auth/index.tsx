@@ -20,9 +20,6 @@ export default function Auth() {
       setIsLogin(false)
       navigate(location.pathname)
     }
-    routes.forEach((item)=>{
-        if(location.pathname===item.path&&item.meta) window.document.title = item.meta.title
-    })
   },[_token, location.pathname, navigate, token])
   return (
     <>
@@ -30,7 +27,7 @@ export default function Auth() {
         isLogin?<></>:<Header />
       }
       <div className='base-box'>
-        {router}
+          {router}
       </div>
     </>
   )

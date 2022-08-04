@@ -21,7 +21,7 @@ const Header: React.FC = () => {
           </Popover>,
           <Button key="2" type='primary'>签到</Button>,
           <Button key="3" type='text' style={{backgroundColor:'#ffa940',color:'white'}}>切换账号</Button>,
-          <Button key="4" danger style={{backgroundColor:'#ff4d4f',color:'white'}}>退出登录</Button>,
+          <Button key="4" type='primary' danger>退出登录</Button>,
         ]}
       >
       </PageHeader>

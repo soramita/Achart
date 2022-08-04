@@ -1,0 +1,55 @@
+.personal-info-box {
+    padding-left: 164px;
+    width: 100%;
+    position: relative;
+    .personal-info-avatar {
+        position: absolute;
+        top: 20px;
+        right: 20%;
+        img {
+            border-radius: 10px;
+        }
+    }
+    .personal-info-avatar-mask {
+        position:absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: 600;
+        width: 155px;
+        height: 155px;
+        background-color: #666;
+        opacity: 60%;
+        border-radius: 10px;
+        cursor: pointer;
+        span {
+            position:absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+        }
+    }
+    .personal-info-msg {
+        div {
+            margin-top: 32px;
+            span:first-child {
+                font-size: 16px;
+                font-weight: 600;
+                display: inline-block;
+                width: 100px;
+            }
+        }
+    }
+    .personal-info-bg {
+        width: 400px;
+        margin-top: 32px;
+        font-weight: 600;
+        font-size: 16px;
+    }
+    .personal-info-change {
+        position:absolute;
+        right: 10px;
+        top: 10px;
+    }
+}

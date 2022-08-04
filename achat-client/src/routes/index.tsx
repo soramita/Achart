@@ -10,40 +10,38 @@ interface Routes extends RouteObject {
 const Login = lazy(()=>import(/* webpackChunkName:'login' */'../pages/Login'))
 const Register = lazy(()=>import(/* webpackChunkName:'register' */'../pages/Register'))
 const BaseChat = lazy(() => import(/* webpackChunkName:'baseChat' */'../pages/Home/BaseChat'))
+const GroupChat = lazy(() => import(/* webpackChunkName:'groupChat' */'../pages/Home/GroupChat'))
+const PersonalInfo = lazy(() => import(/* webpackChunkName:'PersonalInfo' */'../pages/Home/PersonalInfo'))
 const routes:Routes[] = [
     {
         path:'/',
-        element:<Navigate to={'/home'}></Navigate>,
+        element:<Navigate to={'/home/base-chat'}></Navigate>,
     },
     {
         path:'/home',
         element:<Home></Home>,
-        meta:{
-            title:'home'
-        },
         children:[
             {
                 path:'/home/base-chat',
                 element:<BaseChat></BaseChat>,
-                meta:{
-                    title:'公共聊天室'
-                }
+            },
+            {
+                path:'/home/group-chat/:chatId',
+                element:<GroupChat></GroupChat>,
+            },
+            {
+                path:'/home/my-home/:uid',
+                element:<PersonalInfo></PersonalInfo>,
             }
         ]
     },
     {
         path:'/login',
         element:<Login></Login>,
-        meta:{
-            title:'login'
-        }
     },
     {
         path:'/register',
         element:<Register></Register>,
-        meta:{
-            title:'register'
-        }
     },
 ]
 export default routes

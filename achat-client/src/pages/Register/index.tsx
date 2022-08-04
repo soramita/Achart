@@ -7,7 +7,7 @@ import {
   Row,
   Select,
 } from 'antd';
-import React, {  } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks/useRedux';
 import { saveToken } from '../../store/user/user.reducer';
@@ -52,7 +52,6 @@ interface UserRegister {
 
 const Register: React.FC = () => {
   const [form] = Form.useForm();
-
   const navigate = useNavigate()
   const disPatch = useAppDispatch()
   const onFinish = (values: UserRegister) => {
@@ -60,6 +59,9 @@ const Register: React.FC = () => {
     disPatch(saveToken('123'))
     navigate('/home')
   };
+  useEffect(()=>{
+    document.title = '注册'
+  },[])
 
   return (
     <Form

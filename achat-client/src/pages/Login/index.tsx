@@ -1,6 +1,6 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input } from 'antd';
-import React, {  } from 'react';
+import React, { useEffect } from 'react';
 import './index.less'
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks/useRedux';
@@ -23,6 +23,9 @@ const Login: React.FC = () => {
   const toPage = ()=>{
 
   }
+  useEffect(()=>{
+    document.title = '登录'
+  },[])
   return (
     <Form
       name="normal_login"
