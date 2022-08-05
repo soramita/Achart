@@ -1,8 +1,11 @@
 import { TeamOutlined, MessageOutlined, SettingOutlined, MenuOutlined } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
+import { MenuProps } from 'antd';
 import { Menu } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom'
+import Axios from '../../config/axios';
+import { useAppDispatch } from '../../hooks/useRedux';
+import { saveUserInfo } from '../../store/user/user.reducer';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -53,10 +56,8 @@ const Home: React.FC = () => {
   };
   //👆antd组件使用
   const navigate = useNavigate()
-
+  const dispatch = useAppDispatch()
   const switchHandle = (event:any)=>{
-    console.log(event);
-    
     switch (event.keyPath[1]||event.keyPath[0]) {
       case '/friend-list':
         console.log('展示好友列表');
@@ -75,21 +76,20 @@ const Home: React.FC = () => {
         break ;
     }
   }
-
   return (
     <div style={{display:'flex', marginTop:10}}>
-      <Menu
-        mode="inline"
-        openKeys={openKeys}
-        onOpenChange={onOpenChange}
-        style={{ width: 256, minHeight:600, padding:'10px 0' }}
-        items={items}
-        onClick={switchHandle}
-      />
-      <React.Suspense fallback={'loading...'}>
-        <Outlet/>
-      </React.Suspense>
-    </div>
+        <React.Suspense>
+          <Menu
+            mode="inline"
+            openKeys={openKeys}
+            onOpenChange={onOpenChange}
+            style={{ width: 256, minHeight:600, padding:'10px 0' }}
+            items={items}
+            onClick={switchHandle}
+          />
+          <Outlet/>
+        </React.Suspense>
+      </div>
   );
 };
 

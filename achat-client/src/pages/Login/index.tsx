@@ -4,20 +4,33 @@ import React, { useEffect } from 'react';
 import './index.less'
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks/useRedux';
-import { saveToken } from '../../store/user/user.reducer';
+import { saveToken, saveUserInfo } from '../../store/user/user.reducer';
+import Axios from '../../config/axios';
 
 interface UserLogin {
-  username:string,
-  password:string,
+  user_mobile:string,
+  user_email:string,
+  user_password:string,
   remember:boolean
 }
 
 const Login: React.FC = () => {
   const navigate = useNavigate()
   const disPatch = useAppDispatch()
-  const onFinish = (values: UserLogin) => {
-    localStorage.setItem('token','123')
-    disPatch(saveToken('123'))
+  const onFinish = async (values: UserLogin) => {
+    if(values.user_mobile.includes('@')){
+      values.user_email=values.user_mobile
+    }
+    const userData:any = await Axios({
+      url:'/user/userLogin',
+      method:'post',
+      data:values
+    })
+    localStorage.setItem('token',userData.token)
+    localStorage.setItem('uuid',userData.data.uuid)
+    localStorage.setItem('user_id',userData.data.user_id)
+    disPatch(saveToken(userData.token))
+    disPatch(saveUserInfo(userData.data))
     navigate('/home')
   };
   const toRegister = ()=>{
@@ -35,16 +48,16 @@ const Login: React.FC = () => {
     >
       <h1 className='login-title'>登录</h1>
       <Form.Item
-        name="username"
-        rules={[{ required: true, message: '请输入手机号!' }]}
+        name="user_mobile"
+        rules={[{ required: true, message: '请输入手机号或邮箱！' }]}
       >
         <Input 
           prefix={<UserOutlined className="site-form-item-icon" />} 
-          placeholder="手机号"
+          placeholder="手机号/邮箱"
         />
       </Form.Item>
       <Form.Item
-        name="password"
+        name="user_password"
         rules={[{ required: true, message: '请输入密码！' }]}
       >
         <Input

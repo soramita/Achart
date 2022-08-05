@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { decrypt, encrypt } from 'src/utils/bcrypt.util';
 import { Repository } from 'typeorm';
@@ -6,7 +6,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
-
+import { jwtDecrypt, jwtEncrypt } from '../utils/jwt.util';
+import { v4 as uuidv4 } from 'uuid';
 @Injectable()
 export class UserService {
   constructor(
@@ -15,17 +16,26 @@ export class UserService {
   ) {}
   async create(createUserDto: CreateUserDto) {
     createUserDto.user_password = await encrypt(createUserDto.user_password);
+    createUserDto.uuid = uuidv4();
+    const jwt_token = jwtEncrypt(createUserDto.uuid);
     try {
-      this.userRepository
+      await this.userRepository
         .createQueryBuilder()
         .insert()
         .into(UserEntity)
         .values(createUserDto)
         .execute();
-      console.log(createUserDto);
-      return '创建成功！';
+      return {
+        msg: '注册成功！',
+        code: 200,
+        data: createUserDto,
+        token: jwt_token,
+      };
     } catch (error) {
-      return '用户创建失败';
+      return {
+        msg: '注册失败...',
+        code: 400,
+      };
     }
   }
 
@@ -35,9 +45,15 @@ export class UserService {
         .createQueryBuilder('user')
         .where(`user.user_id = :id`, { id: id })
         .getOne();
-      return user;
+      return {
+        code: 200,
+        data: user,
+      };
     } catch (error) {
-      return '未找到该用户';
+      return {
+        code: 200,
+        msg: '没用找到该用户',
+      };
     }
   }
 
@@ -53,7 +69,6 @@ export class UserService {
     try {
       const user = await this.userRepository
         .createQueryBuilder('user')
-        .select('user.user_password')
         .where('user_email = :email OR user_mobile = :mobile', {
           email: loginUserDto.user_email,
           mobile: loginUserDto.user_mobile,
@@ -63,13 +78,23 @@ export class UserService {
         loginUserDto.user_password,
         user.user_password,
       );
+      const token = jwtEncrypt(user.uuid);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { user_password, ...userData } = user;
+      jwtDecrypt(token, userData.uuid);
       if (decryptPwd) {
-        return '登录成功！';
+        return {
+          data: userData,
+          token,
+        };
       } else {
         return '账号或密码错误！';
       }
     } catch (error) {
-      return new HttpException('参数错误！', 400);
+      return {
+        msg: '参数错误！',
+        code: 400,
+      };
     }
   }
 }

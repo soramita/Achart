@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from 'react'
+import React, {useEffect, useState } from 'react'
 import { useLocation, useNavigate, useRoutes } from 'react-router-dom'
 import { useAppSelector } from '../../hooks/useRedux';
 import routes from '../../routes';
@@ -14,22 +14,24 @@ export default function Auth() {
   const [isLogin, setIsLogin] = useState(false)
   useEffect(()=>{
     if(_token==='' || _token===null || token!==_token){
-      setIsLogin(true)
+      setIsLogin(false)
       location.pathname==='/register'?navigate('/register') : navigate('/login')
     }else {
-      setIsLogin(false)
+      setIsLogin(true)
+      if(location.pathname==='/register'||location.pathname==='/login'){
+        navigate('/home/base-chat')
+        return
+      }
       navigate(location.pathname)
     }
   },[_token, location.pathname, navigate, token])
   return (
     <>
       {
-        isLogin?<></>:<Header />
+        isLogin?<Header />:<></>
       }
       <div className='base-box'>
-          <Suspense fallback>
             {router}
-          </Suspense>
       </div>
     </>
   )

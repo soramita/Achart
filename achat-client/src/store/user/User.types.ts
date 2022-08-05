@@ -1,10 +1,13 @@
 type UserInfo = {
-    id:string
-    name:string
-    age:number
-    gender:number
-    avatar:string
-    mobile:string
+    user_id:string
+    uuid:string
+    user_name:string
+    user_age:number
+    user_gender:'male'|'female'|'other'
+    user_avatar:string
+    user_mobile:string
+    user_email:string
+    user_intro:string
 }
 
 type Token = string

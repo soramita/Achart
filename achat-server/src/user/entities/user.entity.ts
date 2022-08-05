@@ -6,6 +6,9 @@ export class UserEntity {
   user_id?: number;
 
   @Column()
+  uuid: string;
+
+  @Column()
   user_email: string;
 
   @Column('char', { length: 11 })

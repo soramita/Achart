@@ -13,7 +13,7 @@ const ChatFrame: React.FC<PropsData> = (props) => {
   const chartFrameBox = useRef(null)
   const textarea = useRef(null)
   const [testUserList, setTestUserList] = useState([
-    {username:'张三',id:'12',msgId:'asd',msgInfo:'我叫张三'},
+    {username:'张三',id:'12',msgId:'asd',msgInfo:'我叫张我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三三'},
     {username:'李四',id:'122',msgId:'asds',msgInfo:'我叫李四'},
     {username:'我',id:'001',msgId:'asfgd',msgInfo:'嘤嘤嘤'},
     {username:'王五',id:'22',msgId:'asdsgd',msgInfo:'我叫王五'},

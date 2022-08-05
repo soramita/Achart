@@ -2,12 +2,15 @@ import { createSlice } from "@reduxjs/toolkit";
 import { initialUser } from "./User.types";
 const initialState:initialUser = {
     userInfo: {
-        id: "",
-        name: "",
-        age: 0,
-        gender: 0,
-        avatar: "",
-        mobile: "",
+        user_id:'',
+        uuid:'',
+        user_name:'',
+        user_age:0,
+        user_gender:'other',
+        user_avatar:'',
+        user_mobile:'',
+        user_email:'',
+        user_intro:'',
     },
     token: "",
     userState: {

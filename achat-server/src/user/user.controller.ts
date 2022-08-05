@@ -6,13 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { LoginUserDto } from './dto/login-user.dto';
-
+import { AuthGuard } from 'src/common/guard/auth.guard';
 @Controller('user')
 @ApiTags('用户登录与注册')
 export class UserController {
@@ -25,9 +26,10 @@ export class UserController {
   }
 
   @ApiOperation({ summary: '获取用户信息' })
-  @Get('/getUserInfo/:id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  @Get('/getUserInfo/:id/:uuid')
+  @UseGuards(AuthGuard)
+  findOne(@Param('id') id: number) {
+    return this.userService.findOne(id);
   }
 
   @Patch(':id')

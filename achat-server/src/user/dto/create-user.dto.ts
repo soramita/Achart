@@ -1,8 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsEnum, IsNotEmpty, IsString, Length } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsString,
+  Length,
+  Max,
+  Min,
+} from 'class-validator';
 import { UserEntity } from '../entities/user.entity';
 
 export class CreateUserDto implements UserEntity {
+  uuid: string;
+
   @ApiProperty({ description: '用户邮箱' })
   @IsNotEmpty({ message: '邮箱不能为空' })
   @IsEmail({ message: '邮箱格式错误' })
@@ -34,6 +45,12 @@ export class CreateUserDto implements UserEntity {
     { message: '性别在male,female,other之间选择' },
   )
   user_gender: string;
+
+  @ApiProperty({ description: '用户年龄' })
+  @IsInt({ message: '年龄为数字' })
+  @Max(100, { message: '年龄最大为100' })
+  @Min(0, { message: '年龄最小为0' })
+  user_age: number;
 
   @ApiProperty({ description: '用户密码' })
   @IsNotEmpty({ message: '用户密码不能为空' })

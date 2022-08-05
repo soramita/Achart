@@ -1,6 +1,7 @@
 import { Navigate, RouteObject } from 'react-router-dom'
-import { lazy } from 'react'
+import { lazy, Suspense } from 'react'
 import Home from '../pages/Home'
+import { Spin } from 'antd'
 interface Routes extends RouteObject {
     meta?:{
         title:string
@@ -23,25 +24,25 @@ const routes:Routes[] = [
         children:[
             {
                 path:'/home/base-chat',
-                element:<BaseChat></BaseChat>,
+                element:<Suspense fallback={<Spin tip="loading..." className='center-spin'></Spin>}><BaseChat></BaseChat></Suspense>,
             },
             {
                 path:'/home/group-chat/:chatId',
-                element:<GroupChat></GroupChat>,
+                element:<Suspense fallback={<Spin tip="loading..." className='center-spin'></Spin>}><GroupChat></GroupChat></Suspense>,
             },
             {
                 path:'/home/my-home/:uid',
-                element:<PersonalInfo></PersonalInfo>,
+                element:<Suspense fallback={<Spin tip="loading..." className='center-spin'></Spin>}><PersonalInfo></PersonalInfo></Suspense>,
             }
         ]
     },
     {
         path:'/login',
-        element:<Login></Login>,
+        element: <Suspense fallback={<Spin tip="loading..." className='center-spin'></Spin>}><Login></Login></Suspense>,
     },
     {
         path:'/register',
-        element:<Register></Register>,
+        element: <Suspense fallback={<Spin tip="loading..." className='center-spin'></Spin>}><Register></Register></Suspense>,
     },
 ]
 export default routes

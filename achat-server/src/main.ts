@@ -6,7 +6,10 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    cors: true,
+  });
+  app.setGlobalPrefix('/api');
 
   const config = new DocumentBuilder()
     .setTitle('Achat的Api文档')
