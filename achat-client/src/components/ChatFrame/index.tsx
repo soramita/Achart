@@ -1,14 +1,19 @@
 import { Avatar, Button } from 'antd'
 import { UserOutlined } from '@ant-design/icons';
 import React, { lazy, Suspense, useEffect, useRef, useState } from 'react'
-import { PropsData } from '../../types/ChatFrame'
 import { publish } from 'pubsub-js'
 import './index.less'
-const GroupInfoModal = lazy(()=>import('../GroupInfoModal'))
-const ChatFrame: React.FC<PropsData> = (props) => {
+import { useAppSelector } from '../../hooks/useRedux';
+import { ChatGroup } from '../../types/group-info';
+const GroupInfoModal = lazy(()=>import(/*webpackChunkName:'GroupInfoModal'*/'../GroupInfoModal'))
+
+const ChatFrame: React.FC = () => {
+  const { userInfo } = useAppSelector(state=>state.users)
+  const [data, setData] = useState({} as ChatGroup)
   const backgroundImage = {
-    backgroundImage:'url(http://localhost:3001/static/image/bg.jpeg)',
-    border:'1px solid #bae7ff'
+    backgroundImage:`url(${userInfo.user_chat_bg})`,
+    border:'1px solid #bae7ff',
+    backgroundColor:'white'
   }
   const chartFrameBox = useRef(null)
   const textarea = useRef(null)
@@ -43,14 +48,12 @@ const ChatFrame: React.FC<PropsData> = (props) => {
   }
 
   useEffect(()=>{
-    console.log('1');
-    
     (chartFrameBox.current as any).scrollTop = (chartFrameBox.current as any).scrollHeight
   },[testUserList])
   return (
     <div className='chat-frame'>
         <h2 className='chat-frame-title'>
-          <span className='chat-frame-show-info' onClick={showGroupInfo}>{props.title}</span>
+          <span className='chat-frame-show-info' onClick={showGroupInfo}>{'chat_name'}</span>
         </h2>
         <div className='chat-frame-box' style={backgroundImage} ref={chartFrameBox}>
             <ul className='chat-frame-list'>
@@ -91,10 +94,9 @@ const ChatFrame: React.FC<PropsData> = (props) => {
           <Button className='chat-frame-input-msg' onClick={sendMsg}>发送（Enter）</Button>
         </div>
         <Suspense>
-        {
-          showGroupBox === true?
-          <GroupInfoModal {...props}/>:''
-        }
+          {
+            showGroupBox?<GroupInfoModal {...data}/>:''
+          }
         </Suspense>
     </div>
   )

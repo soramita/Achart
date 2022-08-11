@@ -3,7 +3,7 @@ import 'antd/dist/antd.less';
 import './assets/css/index.less'
 import Auth from './components/Auth';
 import { useAppDispatch } from './hooks/useRedux';
-import { saveToken, saveUserInfo } from './store/user/user.reducer';
+import { saveGroup, saveToken, saveUserInfo } from './store/user/user.reducer';
 import Axios from './config/axios';
 const App:React.FC = () => {
   const dispatch = useAppDispatch()
@@ -16,7 +16,15 @@ const App:React.FC = () => {
       }).then((res:any)=>{
         dispatch(saveUserInfo(res.data))
       })
+      Axios({
+        url:`/group/getGroup/${localStorage.getItem('user_id')}/${localStorage.getItem('uuid')}`,
+        method:'get',
+      }).then((res:any)=> {
+        const { user_id, ...data } = res.data
+        dispatch(saveGroup(data))
+      })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
   return (
     <div>

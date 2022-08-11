@@ -1,27 +1,18 @@
-import React, { lazy, useEffect, useState } from 'react'
+import React, { lazy, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { PropsData } from '../../../types/ChatFrame'
+import qs from 'qs';
 const ChatFrame = lazy(()=>import(/*webpackChunkName:'ChatFrame'*/'../../../components/ChatFrame'))
 
 const GroupChat:React.FC = () =>{
   const location = useLocation()
-  const [propsData, setPropsData] = useState({
-    title:''
-  } as PropsData)
+  const chatName:any = Object.keys(qs.parse(location.pathname))[0].split('/').pop()
+  
   useEffect(()=>{
-    const testPro = new Promise((res,rej)=>{
-      res('孤芳自赏')
-    })
-    testPro.then((res:any)=>{
-      document.title = res
-      setPropsData({
-        title:res
-      })
-    })
-  },[location])
+    document.title = chatName
+  },[chatName])
   return (
     <div style={{width:'100%'}}>
-      <ChatFrame {...propsData}/>
+      <ChatFrame/>
     </div>
   )
 }

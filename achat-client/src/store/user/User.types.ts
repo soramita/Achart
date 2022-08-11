@@ -1,4 +1,4 @@
-type UserInfo = {
+export type UserInfo = {
     user_id:string
     uuid:string
     user_name:string
@@ -8,17 +8,26 @@ type UserInfo = {
     user_mobile:string
     user_email:string
     user_intro:string
+    user_chat_bg:string
+    user_info_bg:string
+    [key:string]:any
 }
 
 type Token = string
 
-type userState = {
+type UserState = {
     isLine:number
     userPrivacy:number
+}
+
+type UserGroup = {
+    user_friend_group: any
+    user_chat_group: any
 }
 
 export interface initialUser {
     userInfo: UserInfo
     token: Token
-    userState: userState
+    userState: UserState
+    userGroup: UserGroup
 }

@@ -3,10 +3,11 @@ import { UserOutlined } from '@ant-design/icons'
 import { subscribe, unsubscribe} from 'pubsub-js';
 import React, { useEffect, useState, Suspense, lazy } from 'react';
 import './index.less'
-import { PropsData } from '../../types/ChatFrame';
+import { ChatGroup } from '../../types/group-info';
+
 const GroupInfoHomePage = lazy(()=>import(/*webpackChunkName:'GroupInfoHomePage'*/'./GroupInfoHomePage'))
 const GroupInfoMember = lazy(()=>import(/*webpackChunkName:'GroupInfoMember'*/'./GroupInfoMemebr'))
-const GroupInfoModal: React.FC<PropsData> = (props) => {
+const GroupInfoModal: React.FC<ChatGroup> = (props) => {
   const [isModalVisible, setIsModalVisible] = useState(true);
   const [isActive, setIsActive] = useState(true)
   useEffect(()=>{
@@ -16,7 +17,7 @@ const GroupInfoModal: React.FC<PropsData> = (props) => {
     return ()=>{
       unsubscribe('changeGroupInfoBox')
     }
-  })
+  },[])
 
   const handleOk = () => {
     setIsModalVisible(false);
@@ -39,8 +40,8 @@ const GroupInfoModal: React.FC<PropsData> = (props) => {
         <div className='modal-box'>
           <div className='modal-box-left'>
             <Avatar size={108} icon={<UserOutlined />} />
-            <div className='modal-box-title'>{props.title}</div>
-            <div className='modal-box-group-id'>686321116</div>
+            <div className='modal-box-title'>{props.chat_name}</div>
+            <div className='modal-box-group-id'>群号:{props.chat_id}</div>
           </div>
           <div className='modal-box-right'>
             <div className='modal-box-right-title'>
@@ -50,7 +51,7 @@ const GroupInfoModal: React.FC<PropsData> = (props) => {
             <div>
               <Suspense fallback={'loading...'}>
                 {
-                  isActive?<GroupInfoHomePage />:<GroupInfoMember/>
+                  isActive?<GroupInfoHomePage {...props}/>:<GroupInfoMember/>
                 }
               </Suspense>
             </div>

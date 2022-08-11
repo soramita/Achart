@@ -4,6 +4,7 @@ import {
   Col,
   Form,
   Input,
+  Modal,
   Row,
   Select,
 } from 'antd';
@@ -65,12 +66,18 @@ const Register: React.FC = () => {
       method:'post',
       data:userFrom
     })
-    localStorage.setItem('token',userData.token)
-    localStorage.setItem('uuid',userData.data.uuid)
-    localStorage.setItem('user_id',userData.data.user_id)
-    disPatch(saveToken(userData.token))
-    disPatch(saveUserInfo(userData.data))
-    navigate('/home')
+    if(userData.token){
+      localStorage.setItem('token',userData.token)
+      localStorage.setItem('uuid',userData.data.uuid)
+      localStorage.setItem('user_id',userData.data.user_id)
+      disPatch(saveToken(userData.token))
+      disPatch(saveUserInfo(userData.data))
+      navigate('/home')
+    }else{
+      Modal.error({
+        content: userData.msg,
+      })
+    }
   };
   useEffect(()=>{
     document.title = '注册'

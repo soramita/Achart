@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useRoutes } from 'react-router-dom'
 import { useAppSelector } from '../../hooks/useRedux';
 import routes from '../../routes';
@@ -13,13 +13,13 @@ export default function Auth() {
   const _token = localStorage.getItem('token')
   const [isLogin, setIsLogin] = useState(false)
   useEffect(()=>{
-    if(_token==='' || _token===null || token!==_token){
+    if(_token==='' || _token===null || token!==_token || _token==='undefined'){
       setIsLogin(false)
       location.pathname==='/register'?navigate('/register') : navigate('/login')
     }else {
       setIsLogin(true)
       if(location.pathname==='/register'||location.pathname==='/login'){
-        navigate('/home/base-chat')
+        navigate('/home/my-home')
         return
       }
       navigate(location.pathname)

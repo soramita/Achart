@@ -3,10 +3,14 @@ import {
     Form,
     Input,
     Select,
-    Modal
+    Modal,
   } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { subscribe } from 'pubsub-js'
+import { UserInfo } from '../../store/user/User.types';
+import Axios from '../../config/axios';
+import { useAppDispatch } from '../../hooks/useRedux';
+import { setUserInfo } from '../../store/user/user.reducer';
 const { Option } = Select;
 const formItemLayout = {
     labelCol: {
@@ -19,7 +23,8 @@ const formItemLayout = {
     },
   };
   
-const ChangeUserInfo: React.FC = () => {
+const ChangeUserInfo: React.FC<UserInfo> = (props) => {
+  const dispatch = useAppDispatch()
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
   useEffect(()=>{
@@ -36,10 +41,26 @@ const ChangeUserInfo: React.FC = () => {
     setIsModalVisible(false);
   };
 
-  const onFinish = (values: any) => {
-    console.log('Received values of form: ', values);
-    
-    handleOk()
+  const onFinish = async(values: any) => {
+    values.user_id = props.user_id
+    const resultMsg:any = await Axios({
+      url:'/user/updateUserInfo',
+      method:'post',
+      data:values
+    })
+    if(resultMsg.code===200){
+      dispatch(setUserInfo(values))
+      Modal.success({
+        content:resultMsg.msg,
+        onOk() {
+          handleOk()
+        },
+      })
+    }else {
+      Modal.error({
+        content:resultMsg.msg
+      })
+    }
   };
   return (
     <>
@@ -56,17 +77,17 @@ const ChangeUserInfo: React.FC = () => {
             scrollToFirstError
         >
             <Form.Item
-                name="username"
+                name="user_name"
                 label="用户名"
-                initialValue={'嘤嘤嘤'}
+                initialValue={props.user_name}
             >
                 <Input/>
             </Form.Item>
 
             <Form.Item
-                name="gender"
+                name="user_gender"
                 label="性别"
-                initialValue='male'
+                initialValue={props.user_gender}
             >
                 <Select>
                     <Option value="male">男</Option>
@@ -76,9 +97,9 @@ const ChangeUserInfo: React.FC = () => {
             </Form.Item>
 
             <Form.Item
-                name="age"
+                name="user_age"
                 label="年龄"
-                initialValue={20}
+                initialValue={props.user_age}
                 normalize={(value:any)=>{
                     return isNaN(value)?0: Number(value)
                 }}
@@ -88,26 +109,26 @@ const ChangeUserInfo: React.FC = () => {
             </Form.Item>
 
             <Form.Item
-                name="email"
+                name="user_email"
                 label="邮箱"
                 rules={[{ type:'email', message: '请输入正确的邮箱！' }]}
-                initialValue="287720054@qq.com"
+                initialValue={props.user_email}
             >
                 <Input/>
             </Form.Item>
 
             <Form.Item
-                name="intro"
+                name="user_intro"
                 label="个人简介"
-                initialValue={'阿三打撒打撒打撒'}
+                initialValue={props.user_intro}
             >
                 <Input.TextArea showCount maxLength={100} />
             </Form.Item>
 
             <Form.Item
-                name="mobile"
+                name="user_mobile"
                 label="手机号"
-                initialValue={18155219185}
+                initialValue={props.user_mobile}
                 normalize={(value:any)=>{
                     return isNaN(value)?0: value.toString()
                 }}

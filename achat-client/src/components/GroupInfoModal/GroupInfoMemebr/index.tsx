@@ -47,6 +47,7 @@ const GroupInfoMember: React.FC = () => {
   }
   useEffect(() => {
     loadMoreData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -86,7 +87,7 @@ const GroupInfoMember: React.FC = () => {
         </InfiniteScroll>
       </div>
       {
-        isShowInfo?<FriendInfoModal />:''
+        isShowInfo?<FriendInfoModal user_id={1}/>:''
       }
     </>
   );

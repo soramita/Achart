@@ -1,5 +1,5 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, Modal } from 'antd';
 import React, { useEffect } from 'react';
 import './index.less'
 import { useNavigate } from 'react-router-dom';
@@ -26,12 +26,18 @@ const Login: React.FC = () => {
       method:'post',
       data:values
     })
-    localStorage.setItem('token',userData.token)
-    localStorage.setItem('uuid',userData.data.uuid)
-    localStorage.setItem('user_id',userData.data.user_id)
-    disPatch(saveToken(userData.token))
-    disPatch(saveUserInfo(userData.data))
-    navigate('/home')
+    if(userData.token){
+      localStorage.setItem('token',userData.token)
+      localStorage.setItem('uuid',userData.data.uuid)
+      localStorage.setItem('user_id',userData.data.user_id)
+      disPatch(saveToken(userData.token))
+      disPatch(saveUserInfo(userData.data))
+      navigate('/home')
+    }else {
+      Modal.error({
+        content: userData.msg,
+      });
+    }
   };
   const toRegister = ()=>{
     navigate('/register')
