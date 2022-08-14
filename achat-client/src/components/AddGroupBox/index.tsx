@@ -8,10 +8,15 @@ import AddFriendBox from './AddFriendBox';
 import { UserInfo } from '../../store/user/User.types';
 import CreateChatGroup from './CreateChatGroup';
 import GroupInfoModal from '../GroupInfoModal';
-import { ChatGroup, SearchChatGroup } from '../../types/group-info';
+import { ChatGroup, JoinChatGroup, SearchChatGroup } from '../../types/group-info';
+import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
+import { setJoinChatGroup } from '../../store/user/user.reducer';
+import moment from 'moment';
 const { Search } = Input
 
 const AddGroupBox:React.FC = () => {
+  const { userInfo } = useAppSelector(state=>state.users)
+  const dispatch = useAppDispatch()
   //判断当前是找人还是找群
   const [searchUser, setSearchUser] = useState(true)
   //搜索好友/群模态框的显示隐藏
@@ -71,6 +76,7 @@ const AddGroupBox:React.FC = () => {
         setTotal(result.total)
       }else {
         setIsEmpty(result.msg)
+        setSearchUserList([])
       }
     }else {
       const result:any = await Axios({
@@ -82,11 +88,12 @@ const AddGroupBox:React.FC = () => {
           page_end:12,
         }
       })
-      if(result.code === 400){
-        setIsEmpty(result.msg)
-      }else{
+      if(result.code !== 400){
         setSearchChatGroup(result.data)
         setTotal(result.total)
+      }else{
+        setIsEmpty(result.msg)
+        setSearchChatGroup([])
       }
     }
     setIsLoading(false)
@@ -109,6 +116,45 @@ const AddGroupBox:React.FC = () => {
     setSelectUserInfo(userInfo)
     publish('addFriendBox',{isShow:true})
     setIsAddFriend(true)
+  }
+  const joinChatGroup = (e:any,chat_info:ChatGroup) =>{
+    e.stopPropagation()
+    Modal.confirm({
+      content:`确定要加入（${chat_info.chat_name}）吗？`,
+      async onOk() {
+        const data:JoinChatGroup = {
+          chat_id: chat_info.chat_id,
+          chat_uuid: chat_info.chat_uuid,
+          chat_name: chat_info.chat_name,
+          chat_avatar: chat_info.chat_avatar,
+          user_id: userInfo.user_id,
+          user_name: userInfo.user_name,
+          user_age: userInfo.user_age,
+          user_avatar: userInfo.user_avatar,
+          user_gender: userInfo.user_gender,
+          user_join_time: moment().format('LL')
+        }
+        const result:any = await Axios.post('/chat/joinChatGroup',data)
+        if(result.code !== 400) {
+          const chatGroupInfo = {
+            chat_id: data.chat_id,
+            chat_uuid: data.chat_uuid,
+            chat_name: data.chat_name,
+            chat_avatar: data.chat_avatar,
+          }
+          dispatch(setJoinChatGroup(chatGroupInfo))
+          Modal.success({
+            content: result.msg
+          })
+          
+        }else {
+          Modal.error({
+            content: result.msg
+          })
+        }
+      },
+    })
+    
   }
   useEffect(()=>{
     subscribe('showAddGroupBox',(_,data:any)=>{
@@ -206,7 +252,7 @@ const AddGroupBox:React.FC = () => {
                         <p>
                           <span>创建者：{item.chat_create_user.user_name}</span>
                         </p>
-                        <span style={{color:'#1890ff',cursor:'pointer'}} onClick={()=>{}}>添加</span>
+                        <span style={{color:'#1890ff',cursor:'pointer'}} onClick={(e)=>joinChatGroup(e,item)}>添加</span>
                       </div>
                     </div>
                   )

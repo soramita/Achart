@@ -42,6 +42,24 @@ const PersonalInfo:React.FC = () =>{
           })
         }
     }
+    const uploadUserChatBg = async(e:any) =>{
+        const formData = new FormData()
+        formData.append('file',e.target.files[0])
+        const image:any = await Axios.post('/file/uploadFile',formData)
+        dispatch(setUserInfo({user_chat_bg:image.url}))
+        const newUserInfo:any = JSON.parse(JSON.stringify(userInfo))
+        newUserInfo.user_chat_bg = image.url
+        const info:any = await Axios.post('/user/updateUserInfo',newUserInfo)
+        if(info.code === 200) {
+            Modal.success({
+                content:info.msg
+            })
+        } else {
+            Modal.error({
+                content: info.msg
+            })
+        }
+    }
     return(
         <div className='personal-info-box'>
             <div className='personal-info-avatar'>
@@ -64,6 +82,17 @@ const PersonalInfo:React.FC = () =>{
                 <div><span>邮箱：</span><span>{userInfo.user_email}</span></div>
                 <div><span>手机号：</span><span>{userInfo.user_mobile}</span></div>
                 <div><span>个人简介：</span><span>{userInfo.user_intro}</span></div>
+            </div>
+            <div className='personal-chat-bg'>
+                <span style={{marginBottom:'10px'}}>聊天背景：</span>
+                <label form="file">设置背景
+                    <input type='file' id='file' onChange={uploadUserChatBg}/>
+                </label>
+                {
+                    userInfo.user_chat_bg!==''?
+                    <img src={userInfo.user_chat_bg} width='100%' alt="" />:
+                    <div style={{fontSize:'14px',fontWeight:'400',marginLeft:'20px'}}>暂未设置</div>
+                }
             </div>
             <div className='personal-info-bg'>
                 <div style={{marginBottom:'10px'}}>用户背景墙：</div>

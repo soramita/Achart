@@ -4,26 +4,55 @@ import './index.less'
 import * as echarts from 'echarts'
 import { echartSeries, echartsOptions } from '../../../types/echartsInit'
 import { ChatGroup } from '../../../types/group-info'
-const maleData = [
-  {
-    gender:'男',
-    count:10
-  },
-  {
-    gender:'女',
-    count:20
-  },
-  {
-    gender:'其他',
-    count:8
-  },
-]
-const position = [
-  ['15%','50%'],
-  ['45%','50%'],
-  ['75%','50%'],
-]
 const GroupInfoHomePage:React.FC<ChatGroup> = (props) => {
+  let maleCount = 0
+  let femaleCount = 0
+  let otherCount = 0
+   props.chat_group_user.forEach((item:any)=>{
+    if(item.user_gender === 'male'){
+      maleCount +=1
+      if(props.chat_create_user.user_gender === 'male'){
+        maleCount +=1
+      }
+    }
+  })
+  props.chat_group_user.forEach((item:any)=>{
+    if(item.user_gender === 'female'){
+      femaleCount +=1
+      if(props.chat_create_user.user_gender === 'female'){
+        femaleCount +=1
+      }
+    }
+  })
+  props.chat_group_user.forEach((item:any)=>{
+    if(item.user_gender === 'other'){
+      otherCount +=1
+      if(props.chat_create_user.user_gender === 'other'){
+        otherCount+=1
+      }
+    }
+  })
+  const maleData = [
+    {
+      gender:'男',
+      count:maleCount
+    },
+    {
+      gender:'女',
+      count:femaleCount
+    },
+    {
+      gender:'其他',
+      count:otherCount
+    },
+  ]
+  console.log(maleData);
+  
+  const position = [
+    ['15%','50%'],
+    ['45%','50%'],
+    ['75%','50%'],
+  ]
   const showChart = useRef(null)
   useEffect(()=>{
     let chartInstance = echarts.init(showChart.current as unknown as HTMLElement)
@@ -39,7 +68,7 @@ const GroupInfoHomePage:React.FC<ChatGroup> = (props) => {
         },
         data: [
           {
-            name:`${item.gender}${(item.count/38*100).toFixed(0)}%\n${item.count}人`,
+            name:`${item.gender}${(item.count/(props.chat_group_user.length+1)*100).toFixed(0)}%\n${item.count}人`,
             value:item.count,
             label:{
               fontSize:'12px',
@@ -47,7 +76,7 @@ const GroupInfoHomePage:React.FC<ChatGroup> = (props) => {
             }
           },
           {
-            value:38,
+            value:props.chat_group_user.length+1 - item.count,
             itemStyle:{
               color:'#f4f4f6'
             },
@@ -60,7 +89,8 @@ const GroupInfoHomePage:React.FC<ChatGroup> = (props) => {
       series:seriesList
     }
     chartInstance.setOption(options)
-  },[])
+    chartInstance.resize()
+  })
   return (
     <>
       <ul className='group-info-home-box'>

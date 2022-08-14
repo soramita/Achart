@@ -33,7 +33,7 @@ const Header: React.FC = () => {
     <div className="site-page-header-ghost-wrapper">
       <PageHeader
         ghost={false}
-        title={`${userInfo.user_name}您好，欢迎使用聊一聊！`}
+        title={`${userInfo.user_name}，欢迎使用聊一聊！`}
         extra={[
           <Popover key="1" content={content} title="用户信息">
             <Avatar key="0" size={32} src={userInfo.user_avatar} />,

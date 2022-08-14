@@ -1,5 +1,5 @@
 export type UserInfo = {
-    user_id:string
+    user_id:number
     uuid:string
     user_name:string
     user_age:number

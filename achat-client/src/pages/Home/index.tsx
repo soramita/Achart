@@ -26,7 +26,7 @@ function getItem(
 const rootSubmenuKeys = ['/friend-list', '/my-group', '/my-home'];
 
 const Home: React.FC = () => {
-  const [openKeys, setOpenKeys] = useState(['']);
+  const [openKeys, setOpenKeys] = useState([localStorage.getItem('eventKeyPath')||'']);
   const onOpenChange: MenuProps['onOpenChange'] = keys => {
     const latestOpenKey = keys.find(key => openKeys.indexOf(key) === -1);
     if (rootSubmenuKeys.indexOf(latestOpenKey!) === -1) {
@@ -67,21 +67,17 @@ const Home: React.FC = () => {
   ];
   const switchHandle = (event:any)=>{
     const chatName = event.item.props.children[0][1].props.children
-    
-    switch (event.keyPath[1]||event.keyPath[0]) {
-      case '/friend-list':
-        console.log('展示好友列表');
-        break ;
-      case '/my-group':
-        console.log('右边展示相关群组的聊天室');
-        navigate(`/home/group-chat/${event.key}/${chatName}`)
-        break ;
-      case '/my-home':
-        console.log('个人信息');
-        navigate(`/home/my-home`)
-        break;
-      default :
-        break ;
+    localStorage.setItem('defaultSelectKey',event.key)
+    if(event.keyPath[0] === '/my-home'){
+      localStorage.setItem('eventKeyPath',event.keyPath[1])
+      navigate(`/home/my-home`)
+    }else if(event.keyPath[1] === '/my-group'){
+      navigate(`/home/group-chat/${event.key}/${chatName}`)
+      localStorage.setItem('eventKeyPath',event.keyPath[1])
+      window.location.reload()
+    }else if(event.keyPath[2] === '/friend-list'){
+      localStorage.setItem('eventKeyPath',event.keyPath[2])
+      localStorage.setItem('defaultOpenKey',event.keyPath[1])
     }
   }
   return (
@@ -94,7 +90,8 @@ const Home: React.FC = () => {
             style={{ width: 256, minHeight:600, padding:'10px 0' }}
             items={items}
             onClick={switchHandle}
-            defaultSelectedKeys={['/my-home']}
+            defaultOpenKeys={[localStorage.getItem('defaultOpenKey')||'']}
+            defaultSelectedKeys={[localStorage.getItem('defaultSelectKey')||'']}
           />
           <Outlet/>
         </React.Suspense>

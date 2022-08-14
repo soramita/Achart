@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import './index.less'
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks/useRedux';
-import { saveToken, saveUserInfo } from '../../store/user/user.reducer';
+import { saveGroup, saveToken, saveUserInfo } from '../../store/user/user.reducer';
 import Axios from '../../config/axios';
 
 interface UserLogin {
@@ -32,6 +32,13 @@ const Login: React.FC = () => {
       localStorage.setItem('user_id',userData.data.user_id)
       disPatch(saveToken(userData.token))
       disPatch(saveUserInfo(userData.data))
+      Axios({
+        url:`/group/getGroup/${localStorage.getItem('user_id')}/${localStorage.getItem('uuid')}`,
+        method:'get',
+      }).then((res:any)=> {
+        const { user_id, ...data } = res.data
+        disPatch(saveGroup(data))
+      })
       navigate('/home')
     }else {
       Modal.error({

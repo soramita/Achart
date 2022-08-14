@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { initialUser } from "./User.types";
 const initialState:initialUser = {
     userInfo: {
-        user_id:'',
+        user_id:0,
         uuid:'',
         user_name:'',
         user_age:0,
@@ -65,6 +65,9 @@ export const userSlice = createSlice({
                     item.groupList.splice(index,1)
                 }
             })
+        },
+        setJoinChatGroup(state,{payload}){
+            state.userGroup.user_chat_group.push(payload)
         }
     }
 })
@@ -75,6 +78,7 @@ export const {
     saveGroup,
     setUserFriendGroup,
     friendJoinGroup,
-    groupRemoveFriend
+    groupRemoveFriend,
+    setJoinChatGroup
 } = userSlice.actions
 export default userSlice.reducer

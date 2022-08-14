@@ -25,3 +25,25 @@ export class CreateChatGroupDto implements ChatEntity {
   @IsNotEmpty({ message: '群聊创建者不能为空' })
   chat_create_user: CreateUserDto;
 }
+export class SendChatMsgDto {
+  chat_id: string;
+  msg_id: string;
+  sender_id: number;
+  sender_name: string;
+  sender_avatar: string;
+  sender_msg: string;
+  sender_time: string;
+}
+
+export class JoinChatGroupDto {
+  chat_id: number;
+  chat_uuid: string;
+  chat_name: string;
+  chat_avatar: string;
+  user_id: number;
+  user_name: string;
+  user_age: number;
+  user_avatar: string;
+  user_gender: string;
+  user_join_time: string;
+}

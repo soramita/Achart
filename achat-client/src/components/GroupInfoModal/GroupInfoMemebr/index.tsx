@@ -1,59 +1,24 @@
-import { Avatar, Divider, List, Skeleton } from 'antd';
+import { Avatar, List } from 'antd';
 import { publish } from 'pubsub-js';
 import React, { lazy, useEffect, useState } from 'react';
-import InfiniteScroll from 'react-infinite-scroll-component';
+import { ChatGroup } from '../../../types/group-info';
 const FriendInfoModal = lazy(()=>import('../../FriendInfoModal/index'))
-interface DataType {
-  gender: string;
-  name: {
-    title: string;
-    first: string;
-    last: string;
-  };
-  email: string;
-  picture: {
-    large: string;
-    medium: string;
-    thumbnail: string;
-  };
-  nat: string;
-}
 
-const GroupInfoMember: React.FC = () => {
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<DataType[]>([]);
+const GroupInfoMember: React.FC<ChatGroup> = (props) => {
   const [isShowInfo, setIsShowInfo] = useState(false)
-  const loadMoreData = () => {
-    if (loading) {
-      return;
-    }
-    setLoading(true);
-    fetch('https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo')
-      .then(res => res.json())
-      .then(body => {
-
-        console.log(body);
-        
-        setData([...data, ...body.results]);
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
-  };
-  const showFriendInfoModal = ()=>{
+  const [friendId, setFriendId] = useState(0)
+  const showFriendInfoModal = (user_id:number)=>{
+    setFriendId(user_id)
     publish('changeFriendInfoBox',{isShowInfo:true})
     setIsShowInfo(true)
   }
   useEffect(() => {
-    loadMoreData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
       <div style={{fontSize:'12px',padding:'5px 0'}}>
-        当前成员50/100
+        当前拥有成员：{props.chat_group_user.length}
       </div>
       <div
         id="scrollableDiv"
@@ -63,31 +28,22 @@ const GroupInfoMember: React.FC = () => {
           padding: '0 16px',
         }}
       >
-        <InfiniteScroll
-          dataLength={data.length}
-          next={loadMoreData}
-          hasMore={data.length < 50}
-          loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
-          endMessage={<Divider plain>没用更多数据了...</Divider>}
-          scrollableTarget="scrollableDiv"
-        >
-          <List
-            dataSource={data}
-            renderItem={item => (
-              <List.Item key={item.email}>
+        <List
+            dataSource={props.chat_group_user}
+            renderItem={(item:any) => (
+              <List.Item key={item.user_id}>
                 <List.Item.Meta
-                  avatar={<Avatar src={item.picture.large} />}
-                  title={<span style={{cursor:'pointer'}} onClick={showFriendInfoModal}>{item.name.last}</span>}
-                  description='287720054'
+                  avatar={<Avatar src={item.user_avatar} />}
+                  title={<span style={{cursor:'pointer'}} onClick={()=>showFriendInfoModal(item.user_id)}>{item.user_name}</span>}
+                  description={`用户ID:${item.user_id}`}
                 />
-                <div>加入时间：2022/8/2</div>
+                <div>加入时间:{item.user_join_time}</div>
               </List.Item>
             )}
           />
-        </InfiniteScroll>
       </div>
       {
-        isShowInfo?<FriendInfoModal user_id={1}/>:''
+        isShowInfo?<FriendInfoModal user_id={friendId}/>:''
       }
     </>
   );

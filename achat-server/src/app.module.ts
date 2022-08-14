@@ -4,6 +4,7 @@ import { ChatModule } from './modules/chat/chat.module';
 import { FileModule } from './modules/file/file.module';
 import { GroupModule } from './modules/group/group.module';
 import { UserModule } from './modules/user/user.module';
+import { WsModule } from './modules/ws/ws.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { UserModule } from './modules/user/user.module';
     FileModule,
     GroupModule,
     ChatModule,
+    WsModule,
   ],
 })
 export class AppModule {}

@@ -1,5 +1,4 @@
-import { Avatar, Modal } from 'antd';
-import { UserOutlined } from '@ant-design/icons'
+import { Avatar, Modal, Spin } from 'antd';
 import { subscribe, unsubscribe} from 'pubsub-js';
 import React, { useEffect, useState, Suspense, lazy } from 'react';
 import './index.less'
@@ -39,7 +38,7 @@ const GroupInfoModal: React.FC<ChatGroup> = (props) => {
       >
         <div className='modal-box'>
           <div className='modal-box-left'>
-            <Avatar size={108} icon={<UserOutlined />} />
+            <Avatar size={108} src={props.chat_avatar} />
             <div className='modal-box-title'>{props.chat_name}</div>
             <div className='modal-box-group-id'>群号:{props.chat_id}</div>
           </div>
@@ -49,9 +48,9 @@ const GroupInfoModal: React.FC<ChatGroup> = (props) => {
               <span className={!isActive?'modal-box-title-active':''} onClick={()=>setIsActive(!isActive)}>成员</span>
             </div>
             <div>
-              <Suspense fallback={'loading...'}>
+              <Suspense fallback={<Spin tip={'loading...'}></Spin>}>
                 {
-                  isActive?<GroupInfoHomePage {...props}/>:<GroupInfoMember/>
+                  isActive?<GroupInfoHomePage {...props}/>:<GroupInfoMember {...props}/>
                 }
               </Suspense>
             </div>

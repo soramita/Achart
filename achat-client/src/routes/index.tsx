@@ -3,9 +3,6 @@ import { lazy, Suspense } from 'react'
 import Home from '../pages/Home'
 import { Spin } from 'antd'
 interface Routes extends RouteObject {
-    meta?:{
-        title:string
-    },
     children?:Routes[]
 }
 const Login = lazy(()=>import(/* webpackChunkName:'login' */'../pages/Login'))

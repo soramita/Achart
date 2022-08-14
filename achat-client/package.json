@@ -154,6 +154,7 @@
   "devDependencies": {
     "@types/md5": "^2.3.2",
     "@types/pubsub-js": "^1.8.3",
-    "query-string": "^7.1.1"
+    "query-string": "^7.1.1",
+    "socket.io-client": "^4.5.1"
   }
 }

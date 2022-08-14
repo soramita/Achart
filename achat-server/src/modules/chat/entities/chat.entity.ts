@@ -1,3 +1,4 @@
+import { CreateUserDto } from 'src/modules/user/dto/create-user.dto';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'chat' })
@@ -21,7 +22,7 @@ export class ChatEntity {
   chat_group_user: JSON[];
 
   @Column({ type: 'json' })
-  chat_create_user: object;
+  chat_create_user: CreateUserDto;
 
   @Column({ type: 'json' })
   chat_msg: JSON[];

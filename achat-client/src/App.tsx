@@ -24,8 +24,7 @@ const App:React.FC = () => {
         dispatch(saveGroup(data))
       })
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+  },[dispatch])
   return (
     <div>
         <Auth></Auth>
